@@ -2,10 +2,8 @@
 <meta charset="utf-8">
 
 <style>
-  .zip {
+  path:not([fill]) {
     fill: none;
-    stroke: #CCC;
-    stroke-width: .5px;
   }
 </style>
 
@@ -17,6 +15,8 @@
     window.us = <%=raw us_json %>;
     window.path = d3.geoPath()
     window.states = new Map(us.objects.states.geometries.map(d => [d.id, d.properties]))
+
+    // Adapted from https://observablehq.com/@d3/choropleth
     window.makeChloropleth = (data, scheme) => {
       const format = d => `${d}%`
       const domain = d3.extent(data, d => d[1])
@@ -44,6 +44,7 @@
           .datum(topojson.mesh(us, us.objects.states, (a, b) => a !== b))
           .attr("fill", "none")
           .attr("stroke", "white")
+          .attr("stroke-width", "1pt")
           .attr("stroke-linejoin", "round")
           .attr("d", path);
     }
@@ -51,6 +52,7 @@
 
   <script>
     makeChloropleth(new Map(<%=raw discomfort.to_json %>), d3.schemeGreens[9].reverse())
+    makeChloropleth(new Map(<%=raw churches.to_json %>), d3.schemePurples[4])
   </script>
 </body>
 </html>

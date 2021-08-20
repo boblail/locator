@@ -3,7 +3,10 @@ module ApplicationHelper
     CountyMonthlyWeatherValue.group(:fips)
       .pluck(:fips, Arel.sql(<<~SQL))
         SUM(SUM(GREATEST(max_temperature - 78, 0))) OVER (PARTITION BY fips) + 
-        SUM(SUM(GREATEST(32 - min_temperature, 0))) OVER (PARTITION BY fips)
+        GREATEST(
+          SUM(SUM(GREATEST(50 - max_temperature, 0))) OVER (PARTITION BY fips),
+          SUM(SUM(GREATEST(25 - min_temperature, 0))) OVER (PARTITION BY fips)
+        )
       SQL
       .map { |a, b| ["%05d" % a, b.to_f] }
   end
@@ -19,8 +22,16 @@ module ApplicationHelper
   def chill
     CountyMonthlyWeatherValue.group(:fips)
       .pluck(:fips, Arel.sql(<<~SQL))
-        SUM(SUM(GREATEST(32 - min_temperature, 0))) OVER (PARTITION BY fips)
-      SQL
+        GREATEST(
+          SUM(SUM(GREATEST(50 - max_temperature, 0))) OVER (PARTITION BY fips),
+          SUM(SUM(GREATEST(25 - min_temperature, 0))) OVER (PARTITION BY fips)
+        )
+    SQL
+      .map { |a, b| ["%05d" % a, b.to_f] }
+  end
+
+  def churches
+    Congregation.where.not(county_fips: nil).group(:county_fips).count
       .map { |a, b| ["%05d" % a, b.to_f] }
   end
 

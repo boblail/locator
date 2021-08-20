@@ -8,6 +8,7 @@ gem "pg"
 gem "puma", "~> 5.0"
 gem "sass-rails", ">= 6"
 gem "progressbar"
+gem "http"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker", "~> 5.0"

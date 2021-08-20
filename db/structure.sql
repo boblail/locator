@@ -26,6 +26,42 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: congregations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.congregations (
+    id bigint NOT NULL,
+    name character varying,
+    district_id integer,
+    district character varying,
+    status character varying,
+    website character varying,
+    city character varying,
+    state_abbreviation character varying,
+    county_fips integer
+);
+
+
+--
+-- Name: congregations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.congregations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: congregations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.congregations_id_seq OWNED BY public.congregations.id;
+
+
+--
 -- Name: counties; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -158,6 +194,13 @@ ALTER SEQUENCE public.zip_codes_zip_seq OWNED BY public.zip_codes.zip;
 
 
 --
+-- Name: congregations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.congregations ALTER COLUMN id SET DEFAULT nextval('public.congregations_id_seq'::regclass);
+
+
+--
 -- Name: counties fips; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -191,6 +234,14 @@ ALTER TABLE ONLY public.zip_codes ALTER COLUMN zip SET DEFAULT nextval('public.z
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: congregations congregations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.congregations
+    ADD CONSTRAINT congregations_pkey PRIMARY KEY (id);
 
 
 --
@@ -250,6 +301,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210820133803'),
 ('20210820141135'),
 ('20210820142134'),
-('20210820174332');
+('20210820174332'),
+('20210820175632');
 
 
