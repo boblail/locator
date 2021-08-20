@@ -127,6 +127,37 @@ ALTER SEQUENCE public.states_fips_seq OWNED BY public.states.fips;
 
 
 --
+-- Name: zip_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.zip_codes (
+    zip bigint NOT NULL,
+    city character varying,
+    state_fips integer,
+    county_fips integer
+);
+
+
+--
+-- Name: zip_codes_zip_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.zip_codes_zip_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: zip_codes_zip_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.zip_codes_zip_seq OWNED BY public.zip_codes.zip;
+
+
+--
 -- Name: counties fips; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -145,6 +176,13 @@ ALTER TABLE ONLY public.county_monthly_weather_values ALTER COLUMN id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.states ALTER COLUMN fips SET DEFAULT nextval('public.states_fips_seq'::regclass);
+
+
+--
+-- Name: zip_codes zip; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.zip_codes ALTER COLUMN zip SET DEFAULT nextval('public.zip_codes_zip_seq'::regclass);
 
 
 --
@@ -188,6 +226,14 @@ ALTER TABLE ONLY public.states
 
 
 --
+-- Name: zip_codes zip_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.zip_codes
+    ADD CONSTRAINT zip_codes_pkey PRIMARY KEY (zip);
+
+
+--
 -- Name: index_county_monthly_weather_values_on_fips_and_month; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -203,6 +249,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20210820133803'),
 ('20210820141135'),
-('20210820142134');
+('20210820142134'),
+('20210820174332');
 
 

@@ -33,6 +33,31 @@ if State.count.zero?
   )
 end
 
+# Dataset: US Zipcode to County State to FIPS Look Up
+# Source: Nic Colley
+# URL: https://data.world/niccolley/us-zipcode-to-county-state
+if ZipCode.count.zero?
+  state_map = State.pluck(:abbreviation, :fips).to_h
+  # county_by_id = County.all.index_by(&:fips)
+
+  ZipCode.insert_all(
+    CSV.parse(Rails.root.join("data", "ZIP-COUNTY-FIPS_2018-03.csv").read, headers: true)
+      .map do |row|
+        # county = county_by_id[row.fetch("STCOUNTYFP").to_i]
+        # unless county&.name == row.fetch("COUNTYNAME")
+        #   puts "#{county&.name} != #{row.fetch("COUNTYNAME")}"
+        # end
+
+        {
+          zip: row.fetch("ZIP"),
+          city: row.fetch("CITY"),
+          state_fips: state_map.fetch(row.fetch("STATE")),
+          county_fips: row.fetch("STCOUNTYFP").to_i,
+        }
+      end
+  )
+end
+
 # Dataset: Monthly U.S. Climate Divisional Database
 # Source: NOAA
 # URL: https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C00005
